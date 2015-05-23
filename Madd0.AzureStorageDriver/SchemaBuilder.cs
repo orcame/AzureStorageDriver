@@ -78,10 +78,10 @@ namespace Madd0.AzureStorageDriver
                     .SelectMany(row => row.Properties)
                     .GroupBy(column => column.Key)
                     .Select(grp => new TableColumn
-                     {
-                         Name = grp.Key,
-                         TypeName = GetType(grp.First().Value.PropertyType)
-                     });
+                    {
+                        Name = grp.Key,
+                        TypeName = GetType(grp.First().Value.PropertyType)
+                    });
 
                 var baseColumns = new List<TableColumn>
                 {
@@ -126,14 +126,14 @@ namespace Madd0.AzureStorageDriver
         {
             CompilerResults results;
 
-            var dependencies = new[] 
-            { 
+            var dependencies = new[]
+            {
                 "System.dll",
                 "System.Core.dll",
                 "System.Xml.dll",
-                Path.Combine(driverFolder, "Madd0.AzureStorageDriver.dll"), 
-                Path.Combine(driverFolder, "Microsoft.WindowsAzure.Storage.dll"), 
-                Path.Combine(driverFolder, "Microsoft.Data.Services.Client.dll") 
+                Path.Combine(driverFolder, "Madd0.AzureStorageDriver.dll"),
+                Path.Combine(driverFolder, "Microsoft.WindowsAzure.Storage.dll"),
+                Path.Combine(driverFolder, "Microsoft.Data.Services.Client.dll")
             };
 
             // Use the CSharpCodeProvider to compile. Since the driver is .NET 4.0, the typed assembly should be also
@@ -164,13 +164,14 @@ namespace Madd0.AzureStorageDriver
             return (from table in model
                     select new ExplorerItem(table.Name, ExplorerItemKind.QueryableObject, ExplorerIcon.Table)
                     {
+
                         Children = (from column in table.Columns
                                     select new ExplorerItem(column.Name + " (" + column.TypeName + ")", ExplorerItemKind.Property, ExplorerIcon.Column)
                                     {
                                         Icon = keyColumns.Contains(column.Name) ? ExplorerIcon.Key : ExplorerIcon.Column,
-                                        DragText = column.Name
+                                        DragText = column.Name,
                                     }).ToList(),
-                        DragText = table.Name,
+                        DragText = table.Name+ ".AsQueryable()",
                         IsEnumerable = true
                     }).ToList();
         }

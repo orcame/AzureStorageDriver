@@ -83,6 +83,27 @@ namespace Madd0.AzureStorageDriver
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether AzureChina(mooncake) is being used.
+        /// </summary>
+        /// <value><c>true</c> if local storage is used; otherwise, <c>false</c>.</value>
+        public bool UseAzureChina
+        {
+            get
+            {
+                return (bool?)this._driverData.Element("UseAzureChina") ?? false;
+            }
+            set
+            {
+                this._driverData.SetElementValue("UseAzureChina", value);
+
+                if (value)
+                {
+                    this.ClearAccountNameAndKey();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to use HTTPS.
         /// </summary>
         /// <value><c>true</c> if HTTPS is used; otherwise, <c>false</c>.</value>
@@ -145,6 +166,13 @@ namespace Madd0.AzureStorageDriver
             if (this.UseLocalStorage)
             {
                 return CloudStorageAccount.DevelopmentStorageAccount;
+            }
+            else if (this.UseAzureChina)
+            {
+                return new CloudStorageAccount(
+                    new StorageCredentials(this.AccountName, this.AccountKey),
+                    @"core.chinacloudapi.cn",
+                    this.UseHttps);
             }
             else
             {

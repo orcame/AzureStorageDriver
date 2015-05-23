@@ -38,10 +38,31 @@
         <Label Padding="0 0 0 3">Storage account key:</Label>
         <TextBox TabIndex="3" Text="{Binding AccountKey}" />
 
-        <CheckBox Margin="0 10"
+        <DockPanel>
+            <CheckBox Margin="0 10"
                   Content="_Remember this connection"
                   IsChecked="{Binding Persist}"
                   TabIndex="5" />
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=UseDevelopmentStorage}" Value="True">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <CheckBox x:Name="UseAzureChina"
+        		    Margin="30 0 0 0"
+                    HorizontalAlignment="Right"
+        		    VerticalAlignment="Center"
+        		    Content="Use Azure _China"
+        		    DockPanel.Dock="Right"
+        		    IsChecked="{Binding UseAzureChina}"
+                      />
+            </Grid>
+        </DockPanel>
 
         <Expander Header="_Advanced">
             <Expander.Style>
